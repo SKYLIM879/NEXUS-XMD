@@ -3,25 +3,25 @@ const axios = require('axios');
 
 cmd({
     pattern: "pair",
-    alias: ["getpair", "clonebot"],
+    alias: ["getpair", "code"],
     react: "✅",
     desc: "Get pairing code for NEXUS-XMD bot",
     category: "download",
-    use: ".pair +2547XXX",
+    use: ".pair 254785392165",
     filename: __filename
-}, async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+}, async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, senderNumber, reply }) => {
     try {
         // Extract phone number from command
-        const phoneNumber = q ? q.trim() : senderNumber;
-        
+        const phoneNumber = q ? q.trim().replace(/[^0-9]/g, '') : senderNumber.replace(/[^0-9]/g, '');
+
         // Validate phone number format
-        if (!phoneNumber || !phoneNumber.match(/^\+?\d{10,15}$/)) {
-            return await reply("❌ Please provide a valid phone number with country code\nExample: .pair +25478XXX");
+        if (!phoneNumber || phoneNumber.length < 10 || phoneNumber.length > 15) {
+            return await reply("❌ Please provide a valid phone number without `+`\nExample: `.pair 2547124666`");
         }
 
         // Make API request to get pairing code
-        const response = await axios.get(`https://nexus-xmd-pair-site.onrender.com/code?phone=${encodeURIComponent(phoneNumber)}`);
-        
+        const response = await axios.get(`https://nexus-pair2.onrender.com/code?number=${encodeURIComponent(phoneNumber)}`);
+
         if (!response.data || !response.data.code) {
             return await reply("❌ Failed to retrieve pairing code. Please try again later.");
         }
@@ -32,54 +32,10 @@ cmd({
         // Send initial message with formatting
         await reply(`${doneMessage}\n\n*Your pairing code is:* ${pairingCode}`);
 
-        // Add 2 second delay
+        // Optional 2-second delay
         await new Promise(resolve => setTimeout(resolve, 2000));
 
-        // Send clean code message
-        await reply(`${pairingCode}`);
-
-    } catch (error) {
-        console.error("Pair command error:", error);
-        await reply("❌ An error occurred while getting pairing code. Please try again later.");
-    }
-});
-
-
-cmd({
-    pattern: "pair2",
-    alias: ["getpair2", "clonebot2"],
-    react: "✅",
-    desc: "Get pairing code for NEXUS-XMD bot",
-    category: "download",
-    use: ".pair +2543427582XXX",
-    filename: __filename
-}, async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
-    try {
-        // Extract phone number from command
-        const phoneNumber = q ? q.trim() : senderNumber;
-        
-        // Validate phone number format
-        if (!phoneNumber || !phoneNumber.match(/^\+?\d{10,15}$/)) {
-            return await reply("❌ Please provide a valid phone number with country code\nExample: .pair +254427582XXX");
-        }
-
-        // Make API request to get pairing code
-        const response = await axios.get(`https://nexus-xmd-pair-site.onrender.com/code?phone=${encodeURIComponent(phoneNumber)}`);
-        
-        if (!response.data || !response.data.code) {
-            return await reply("❌ Failed to retrieve pairing code. Please try again later.");
-        }
-
-        const pairingCode = response.data.code;
-        const doneMessage = "> *NEXUS-XMD PAIRING COMPLETED*";
-
-        // Send initial message with formatting
-        await reply(`${doneMessage}\n\n*Your pairing code is:* ${pairingCode}`);
-
-        // Add 2 second delay
-        await new Promise(resolve => setTimeout(resolve, 2000));
-
-        // Send clean code message
+        // Send clean code again
         await reply(`${pairingCode}`);
 
     } catch (error) {

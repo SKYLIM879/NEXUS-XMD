@@ -26,7 +26,7 @@ cmd({
     const botNumber = conn.user.id.split(":")[0] + '@s.whatsapp.net';
 
     if (m.mentionedJid.includes(botNumber)) {
-      const thumbnailRes = await axios.get(config.MENU_IMAGE_URL || "https://files.catbox.moe/ug8w1x.jpg", {
+      const thumbnailRes = await axios.get(config.MENU_IMAGE_URL || "https://files.catbox.moe/7cv7xj.jpg", {
         responseType: 'arraybuffer'
       });
       const thumbnailBuffer = Buffer.from(thumbnailRes.data, 'binary');
@@ -40,13 +40,13 @@ cmd({
           forwardingScore: 999,
           isForwarded: true,
           externalAdReply: {
-            title: config.BOT_NAME || "NEXUS-XMD 🥀",
-            body: config.DESCRIPTION || "POWERED BY NEXUS TECH ☣️",
+            title: config.BOT_NAME || "NEXUS-XMD",
+            body: config.DESCRIPTION || "POWERED BY PKDRILLER ",
             mediaType: 1,
             renderLargerThumbnail: true,
             thumbnail: thumbnailBuffer,
-            mediaUrl: "https://files.catbox.moe/ug8w1x.jpg", // Static image URL
-            sourceUrl: "https://whatsapp.com/channel/0029Vad7YNyJuyA77CtIPX0x",
+            mediaUrl: "https://files.catbox.moe/0i65sy.png", // Static image URL
+            sourceUrl: "https://wa.me/message/254785392165",
             showAdAttribution: true
           }
         }
